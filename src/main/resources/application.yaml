@@ -1,0 +1,32 @@
+server:
+  port: 3000
+
+spring:
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    properties:
+     hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/multi_factor?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: rootpassword
+
+multi_factor:
+  modes:
+    phone_otp:
+      code_length: 6
+      code_expiry: 300000
+      code_limit: 3
+    email_otp:
+      code_length: 6
+      code_expiry: 300000
+      code_limit: 3
+    veridium:
+      code_expiry: 300000
+      code_limit: 3
+    rsa:
+      code_expiry: 300000
+      code_limit: 3
