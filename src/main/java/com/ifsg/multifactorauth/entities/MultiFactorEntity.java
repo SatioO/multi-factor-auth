@@ -19,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity(name = "MULTI_FACTOR_AUTH_SESSION")
-public class AuthSessionEntity {
+public class MultiFactorEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Column(name = "sessionId", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")

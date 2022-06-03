@@ -1,12 +1,12 @@
 package com.ifsg.multifactorauth.models.interfaces;
 
-import com.ifsg.multifactorauth.entities.AuthSessionEntity;
-import com.ifsg.multifactorauth.models.dtos.CreateSessionDTO;
-import com.ifsg.multifactorauth.models.dtos.SessionDTO;
-import com.ifsg.multifactorauth.models.dtos.ValidateSessionDTO;
+import com.ifsg.multifactorauth.entities.MultiFactorEntity;
+import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
+import com.ifsg.multifactorauth.models.dtos.ChallengeDTO;
+import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
 
 public interface MultiFactorAuth {
-    SessionDTO createSession(CreateSessionDTO data);
+    ChallengeDTO createSession(InitializeChallengeDTO data);
 
-    Boolean validateSession(AuthSessionEntity entity, ValidateSessionDTO body);
+    Boolean validateSession(MultiFactorEntity entity, VerifyChallengeDTO body);
 }

@@ -3,13 +3,14 @@ package com.ifsg.multifactorauth.models.dtos;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
 import lombok.Data;
 
-import java.util.UUID;
+import javax.validation.constraints.NotNull;
 
 @Data
-public class ValidateSessionDTO {
-    private UUID sessionId;
+public class InitializeChallengeDTO {
+    @NotNull
     private AuthMethod authMethod;
-    private String code;
+
     private String browserVersion;
+
     private String deviceVersion;
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class SessionDTO {
+public class ChallengeDTO {
     private UUID sessionId;
     private AuthMethod method;
     private String code;

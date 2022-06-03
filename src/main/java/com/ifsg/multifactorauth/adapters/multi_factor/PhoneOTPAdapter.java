@@ -1,10 +1,10 @@
 package com.ifsg.multifactorauth.adapters.multi_factor;
 
 import com.ifsg.multifactorauth.adapters.otp.OTPGeneratorAdapter;
-import com.ifsg.multifactorauth.entities.AuthSessionEntity;
-import com.ifsg.multifactorauth.models.dtos.CreateSessionDTO;
-import com.ifsg.multifactorauth.models.dtos.SessionDTO;
-import com.ifsg.multifactorauth.models.dtos.ValidateSessionDTO;
+import com.ifsg.multifactorauth.entities.MultiFactorEntity;
+import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
+import com.ifsg.multifactorauth.models.dtos.ChallengeDTO;
+import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
 import com.ifsg.multifactorauth.models.interfaces.MultiFactorAuth;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +26,22 @@ public class PhoneOTPAdapter implements MultiFactorAuth {
     private Integer codeExpiry;
 
     @Override
-    public SessionDTO createSession(CreateSessionDTO data) {
+    public ChallengeDTO createSession(InitializeChallengeDTO data) {
         String code = otpGeneratorAdapter.generate(codeLength);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MILLISECOND, codeExpiry);
 
-        return SessionDTO.builder()
+        return ChallengeDTO.builder()
                 .code(code)
                 .method(data.getAuthMethod())
-                .status(AuthStatus.PENDING)
+                .status(AuthStatus.CHALLENGE)
                 .expiryTime(calendar.getTime())
                 .createdTime(new Date())
                 .build();
     }
 
     @Override
-    public Boolean validateSession(AuthSessionEntity entity, ValidateSessionDTO body) {
+    public Boolean validateSession(MultiFactorEntity entity, VerifyChallengeDTO body) {
         return entity.getCode().equals(body.getCode());
     }
 }

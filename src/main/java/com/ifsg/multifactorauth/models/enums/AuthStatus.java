@@ -1,8 +1,9 @@
 package com.ifsg.multifactorauth.models.enums;
 
 public enum AuthStatus {
-    FAILURE,
+    CHALLENGE,
     SUCCESS,
-    PENDING,
-    BLOCKED
+    FAIL,
+    EXPIRED,
+    ERROR
 }

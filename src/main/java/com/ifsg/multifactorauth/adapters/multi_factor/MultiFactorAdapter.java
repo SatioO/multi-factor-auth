@@ -8,28 +8,31 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class MultiFactorAdapter {
-    private final VeridiumAdapter veridiumAdapter;
     private final RSAAdapter rsaAdapter;
     private final PhoneOTPAdapter phoneOTPAdapter;
     private final EmailOTPAdapter emailOTPAdapter;
 
     public MultiFactorAuth getAdapter(AuthMethod method) {
         switch (method) {
-            case VERIDIUM -> {
-                return this.veridiumAdapter;
-            }
-
-            case RSA -> {
+            case SOFT_CODE -> {
                 return this.rsaAdapter;
             }
 
-            case PHONE_OTP -> {
+            case SMS_CODE -> {
                 return this.phoneOTPAdapter;
             }
 
-            case EMAIL_OTP -> {
+            case EMAIL_CODE -> {
                 return this.emailOTPAdapter;
             }
+
+            case PASSWORD -> { return null; }
+
+            case PIN_CODE -> { return null; }
+
+            case EMERGENCY_CODE -> { return null; }
+
+            case VOICE_CODE -> { return null; }
 
             default -> {
                 throw new RuntimeException("Invalid Auth Method");
