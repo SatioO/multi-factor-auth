@@ -1,6 +1,7 @@
 package com.ifsg.multifactorauth.controllers.v1;
 
 import com.ifsg.multifactorauth.entities.MultiFactorEntity;
+import com.ifsg.multifactorauth.models.dtos.ChallengeResponse;
 import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
 import com.ifsg.multifactorauth.services.MultiFactorService;
@@ -22,7 +23,7 @@ public class MultiFactorController {
     }
 
     @PostMapping("/verify")
-    public Boolean verifyChallenge(@Valid @RequestBody VerifyChallengeDTO body) {
+    public ChallengeResponse verifyChallenge(@Valid @RequestBody VerifyChallengeDTO body) {
         return this.multiFactorService.verifyChallenge(body);
     }
 

@@ -2,6 +2,7 @@ package com.ifsg.multifactorauth.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
+import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -67,8 +68,18 @@ public class MultiFactorEntity {
     private Integer attempts;
 
     @Column(nullable = false)
-    private AuthMethod method;
+    private AuthMethod authMethod;
+
+    @Column(nullable = true)
+    private AuthReasonCode reasonCode;
 
     @Column(nullable = false)
     private AuthStatus status;
 }
+
+/**
+ *
+ * min_failure_attempts: 5 -> user 5 incorrectly -> 6th - correctly -> 7th correctly -> Authentication, blocked
+ * max_failure_attempts: 10
+ *
+ * */

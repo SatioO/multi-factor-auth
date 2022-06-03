@@ -2,18 +2,18 @@ package com.ifsg.multifactorauth.services;
 
 import com.ifsg.multifactorauth.adapters.multi_factor.MultiFactorAdapter;
 import com.ifsg.multifactorauth.entities.MultiFactorEntity;
-import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
 import com.ifsg.multifactorauth.models.dtos.ChallengeDTO;
+import com.ifsg.multifactorauth.models.dtos.ChallengeResponse;
+import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
+import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
 import com.ifsg.multifactorauth.repositories.MultiFactorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -24,9 +24,6 @@ public class MultiFactorServiceImpl implements MultiFactorService {
     @Autowired
     private MultiFactorRepository multiFactorRepository;
 
-    @Value("${multi_factor.modes.email_otp.code_limit}")
-    private Integer codeLimit;
-
     @Override
     public MultiFactorEntity getChallengeStatus(UUID sessionId) {
         return this.multiFactorRepository
@@ -35,89 +32,84 @@ public class MultiFactorServiceImpl implements MultiFactorService {
     }
 
     @Override
-    public Boolean verifyChallenge(VerifyChallengeDTO body) {
-        MultiFactorEntity entity = this.multiFactorRepository.findById(body.getSessionId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Session Found."));
+    public ChallengeResponse verifyChallenge(VerifyChallengeDTO body) {
+        return this.multiFactorRepository.findById(body.getSessionId()).map(entity -> {
+            // NOTE: Throw error if the user tries to validate already approved session
+            if (entity.getStatus() == AuthStatus.SUCCESS) {
+                return ChallengeResponse
+                        .builder()
+                        .authStatus(AuthStatus.ERROR)
+                        .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
+                        .build();
+            }
 
-        // NOTE: Return error if the user tries to validate already utilised session
-        if (entity.getStatus() == AuthStatus.SUCCESS) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Current Session is already verified");
-        }
+            // NOTE: Throw error if the user tries to validate expired session
+            if (entity.getStatus() == AuthStatus.EXPIRED) {
+                return ChallengeResponse
+                        .builder()
+                        .authStatus(AuthStatus.ERROR)
+                        .authReasonCode(AuthReasonCode.CHALLENGE_EXPIRED)
+                        .build();
+            }
 
-        // NOTE: Return error if the user tries to validate blocked session
-        if (entity.getStatus() == AuthStatus.ERROR) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE,
-                    "The server cannot handle the request. The request is malformed or invalid."
-            );
-        }
+            // NOTE: Throw error if the user is blocked from verification after multiple failure attempts
+            if (entity.getStatus() == AuthStatus.ERROR) {
+                return ChallengeResponse
+                        .builder()
+                        .authStatus(AuthStatus.ERROR)
+                        .authReasonCode(AuthReasonCode.VERIFICATION_BLOCKED)
+                        .build();
+            }
 
-        // NOTE: Return error if the user tries to validate blocked session
-        if (entity.getStatus() == AuthStatus.EXPIRED) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Current Session is Expired. Please try creating a new session.");
-        }
+            // NOTE: Connect to respective adapter to perform validation logic such as compare OTP
+            boolean result = this.multiFactorAdapter
+                    .getAdapter(body.getAuthMethod())
+                    .validateSession(entity, body);
 
-        Integer attempts = entity.getAttempts() + 1;
+            int attempts = entity.getAttempts() + 1;
 
-        // NOTE: check if current session has exceeded the expiry time
-        Date currentDate = new Date();
-        boolean hasExceededExpiryTime = currentDate.after(entity.getExpiryTime());
+            if(result) {
+                this.multiFactorRepository.save(
+                        entity.toBuilder()
+                                .attempts(attempts)
+                                .status(AuthStatus.SUCCESS)
+                                .build());
 
-        // NOTE: if it has crossed the expiry time
-        if(hasExceededExpiryTime) {
-            this.multiFactorRepository.save(
-                    entity.toBuilder()
-                            .attempts(attempts)
-                            .status(AuthStatus.EXPIRED)
-                            .build());
+                return ChallengeResponse
+                        .builder()
+                        .authStatus(AuthStatus.SUCCESS)
+                        .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
+                        .build();
+            } else {
+                if (attempts > 3) {
+                    // NOTE: if entered OTP doesn't match, mark it with failure in DB but if it crosses set limit, then mark that as blocked
+                    this.multiFactorRepository.save(
+                            entity.toBuilder()
+                                    .attempts(attempts)
+                                    .status(AuthStatus.ERROR)
+                                    .build());
 
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE,
-                    "Current Session is Expired. Please try creating a new session."
-            );
-        }
+                    return ChallengeResponse
+                            .builder()
+                            .authStatus(AuthStatus.ERROR)
+                            .authReasonCode(AuthReasonCode.VERIFICATION_BLOCKED)
+                            .build();
+                } else {
+                    // NOTE: if entered OTP doesn't match, mark it with failure in DB but if it crosses set limit, then mark that as blocked
+                    this.multiFactorRepository.save(
+                            entity.toBuilder()
+                                    .attempts(attempts)
+                                    .status(AuthStatus.FAIL)
+                                    .build());
 
-        // NOTE: if it crosses set limit, then mark that as blocked
-        boolean hasExceededCodeLimit = attempts > codeLimit;
-        if(hasExceededCodeLimit) {
-            this.multiFactorRepository.save(
-                    entity.toBuilder()
-                            .attempts(attempts)
-                            .status(AuthStatus.ERROR)
-                            .build());
-
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE,
-                    "Access denied for this request. You might have entered the wrong credential."
-            );
-        }
-
-        // NOTE: Connect to respective adapter to perform validation logic such as compare OTP
-        Boolean result = this.multiFactorAdapter
-                .getAdapter(body.getAuthMethod())
-                .validateSession(entity, body);
-
-        // NOTE: if entered OTP matches, mark it with success in DB
-        if(result) {
-            this.multiFactorRepository.save(
-                    entity.toBuilder()
-                            .attempts(attempts)
-                            .status(AuthStatus.SUCCESS)
-                            .build());
-            return true;
-        } else {
-            // NOTE: if entered OTP doesn't match, mark it with failure in DB but if it crosses set limit, then mark that as blocked
-            this.multiFactorRepository.save(
-                    entity.toBuilder()
-                            .attempts(attempts)
-                            .status(AuthStatus.FAIL)
-                            .build());
-
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE,
-                    "Access denied for this request. You might have entered the wrong credential."
-            );
-        }
+                    return ChallengeResponse
+                            .builder()
+                            .authStatus(AuthStatus.FAIL)
+                            .authReasonCode(AuthReasonCode.CHALLENGE_FAILED)
+                            .build();
+                }
+            }
+        }).orElse(ChallengeResponse.builder().authStatus(AuthStatus.ERROR).authReasonCode(AuthReasonCode.CHALLENGE_NOT_FOUND).build());
     }
 
     @Override
@@ -133,7 +125,8 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                         .customerId("DUMMY_CUST_1")
                         .channel("DUMMY_CHAN_WEB")
                         .ipAddress("1.2.3.4")
-                        .method(session.getMethod())
+                        .authMethod(session.getAuthMethod())
+                        .reasonCode(AuthReasonCode.VERIFICATION_REQUIRED)
                         .attempts(0)
                         .status(session.getStatus())
                         .createdTime(session.getCreatedTime())

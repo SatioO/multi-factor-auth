@@ -5,5 +5,6 @@ public enum AuthStatus {
     SUCCESS,
     FAIL,
     EXPIRED,
-    ERROR
+    ERROR,
+    BLOCKED
 }

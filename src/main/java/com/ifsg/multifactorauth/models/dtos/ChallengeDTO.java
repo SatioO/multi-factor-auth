@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 public class ChallengeDTO {
     private UUID sessionId;
-    private AuthMethod method;
+    private AuthMethod authMethod;
     private String code;
     private AuthStatus status;
     private Date expiryTime;

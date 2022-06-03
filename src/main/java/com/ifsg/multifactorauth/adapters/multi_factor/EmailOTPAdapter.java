@@ -33,7 +33,7 @@ public class EmailOTPAdapter implements MultiFactorAuth {
 
         return ChallengeDTO.builder()
                 .code(code)
-                .method(data.getAuthMethod())
+                .authMethod(data.getAuthMethod())
                 .status(AuthStatus.CHALLENGE)
                 .expiryTime(calendar.getTime())
                 .createdTime(new Date())

@@ -15,7 +15,7 @@ public class VeridiumAdapter implements MultiFactorAuth  {
     public ChallengeDTO createSession(InitializeChallengeDTO data) {
         return ChallengeDTO.builder()
                 .code("123456")
-                .method(data.getAuthMethod())
+                .authMethod(data.getAuthMethod())
                 .status(AuthStatus.CHALLENGE)
                 .build();
     }

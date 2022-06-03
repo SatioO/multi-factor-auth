@@ -9,22 +9,16 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class MultiFactorAdapter {
     private final RSAAdapter rsaAdapter;
+
+    private final VeridiumAdapter veridiumAdapter;
     private final PhoneOTPAdapter phoneOTPAdapter;
     private final EmailOTPAdapter emailOTPAdapter;
 
     public MultiFactorAuth getAdapter(AuthMethod method) {
         switch (method) {
-            case SOFT_CODE -> {
-                return this.rsaAdapter;
-            }
+            case SMS_CODE -> { return this.phoneOTPAdapter; }
 
-            case SMS_CODE -> {
-                return this.phoneOTPAdapter;
-            }
-
-            case EMAIL_CODE -> {
-                return this.emailOTPAdapter;
-            }
+            case EMAIL_CODE -> { return this.emailOTPAdapter; }
 
             case PASSWORD -> { return null; }
 
@@ -34,9 +28,11 @@ public class MultiFactorAdapter {
 
             case VOICE_CODE -> { return null; }
 
-            default -> {
-                throw new RuntimeException("Invalid Auth Method");
-            }
+            case RSA_SECUREID -> { return this.rsaAdapter; }
+
+            case VERIDIUM -> { return this.veridiumAdapter; }
+
+            default -> { throw new RuntimeException("Invalid Auth Method"); }
         }
     }
 }

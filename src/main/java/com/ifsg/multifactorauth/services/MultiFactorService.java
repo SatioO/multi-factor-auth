@@ -1,6 +1,7 @@
 package com.ifsg.multifactorauth.services;
 
 import com.ifsg.multifactorauth.entities.MultiFactorEntity;
+import com.ifsg.multifactorauth.models.dtos.ChallengeResponse;
 import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
 
@@ -11,7 +12,7 @@ public interface MultiFactorService {
     MultiFactorEntity getChallengeStatus(UUID sessionId);
 
     /** This request should be used when the client wants to provide authentication credentials (i.e., a password, an OTP, etc.). */
-    Boolean verifyChallenge(VerifyChallengeDTO body);
+    ChallengeResponse verifyChallenge(VerifyChallengeDTO body);
 
     /** This request should be used when the client wants to start an authentication attempt. */
     MultiFactorEntity initializeChallenge(InitializeChallengeDTO sessionId);
