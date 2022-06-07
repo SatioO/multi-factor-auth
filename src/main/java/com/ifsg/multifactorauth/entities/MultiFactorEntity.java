@@ -7,10 +7,7 @@ import com.ifsg.multifactorauth.models.enums.AuthStatus;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -22,8 +19,10 @@ import java.util.UUID;
 @Entity(name = "MULTI_FACTOR_AUTH_SESSION")
 public class MultiFactorEntity {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @Column(name = "sessionId", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(36)")
     @Type(type="uuid-char")
     private UUID sessionId;
 

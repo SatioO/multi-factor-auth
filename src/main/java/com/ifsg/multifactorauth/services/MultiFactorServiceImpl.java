@@ -8,32 +8,33 @@ import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
 import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
+import com.ifsg.multifactorauth.models.enums.RequestHeaderEnum;
 import com.ifsg.multifactorauth.repositories.MultiFactorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class MultiFactorServiceImpl implements MultiFactorService {
-    @Autowired
-    private MultiFactorAdapter multiFactorAdapter;
-
-    @Autowired
-    private MultiFactorRepository multiFactorRepository;
+    private final MultiFactorAdapter multiFactorAdapter;
+    private final MultiFactorRepository multiFactorRepository;
 
     @Override
     public MultiFactorEntity getChallengeStatus(UUID sessionId) {
+        System.out.println(sessionId);
         return this.multiFactorRepository
-                .findById(sessionId)
+                .findBySessionId(sessionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session Not Found."));
     }
-
     @Override
     public ChallengeResponse verifyChallenge(VerifyChallengeDTO body) {
-        return this.multiFactorRepository.findById(body.getSessionId()).map(entity -> {
+        return this.multiFactorRepository.findBySessionId(body.getSessionId()).map(entity -> {
             // NOTE: Throw error if the user tries to validate already approved session
             if (entity.getStatus() == AuthStatus.SUCCESS) {
                 return ChallengeResponse
@@ -111,9 +112,8 @@ public class MultiFactorServiceImpl implements MultiFactorService {
             }
         }).orElse(ChallengeResponse.builder().authStatus(AuthStatus.ERROR).authReasonCode(AuthReasonCode.CHALLENGE_NOT_FOUND).build());
     }
-
     @Override
-    public MultiFactorEntity initializeChallenge(InitializeChallengeDTO body) {
+    public MultiFactorEntity initializeChallenge(Map<String, String> headers, InitializeChallengeDTO body, Authentication auth) {
         ChallengeDTO session = this.multiFactorAdapter
                 .getAdapter(body.getAuthMethod())
                 .createSession(body);
@@ -121,10 +121,11 @@ public class MultiFactorServiceImpl implements MultiFactorService {
         return this.multiFactorRepository.save(
                 MultiFactorEntity
                         .builder()
+                        .sessionId(UUID.fromString(headers.get(RequestHeaderEnum.GLOBALUUID.value)))
                         .code(session.getCode())
-                        .customerId("DUMMY_CUST_1")
-                        .channel("DUMMY_CHAN_WEB")
-                        .ipAddress("1.2.3.4")
+                        .customerId(auth.getName())
+                        .channel(headers.get(RequestHeaderEnum.CHANNEL.value))
+                        .ipAddress(null)
                         .authMethod(session.getAuthMethod())
                         .reasonCode(AuthReasonCode.VERIFICATION_REQUIRED)
                         .attempts(0)

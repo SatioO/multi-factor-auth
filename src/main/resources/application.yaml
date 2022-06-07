@@ -14,6 +14,9 @@ spring:
     username: root
     password: rootpassword
 
+jwt:
+  secret: "-----BEGIN PUBLIC KEY-----MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAurSWS32q4eAAVVp3NEHx0n0Pp6V9/g/l3idyeQCE2xImmjrSuOthJYgzjvulPhpJRH3uz0EsKHUUxBoC2M9uM2S7jmiJzfEHctxPBwyLiueisFYRBuMoBLPF/08h7WEbVKk2Ku/tJ4cYle9ukrUEvu1zfu4lcRkS3PVp4g6CeklaQet7CYm5b7JhZg2/W08aV7qBUK8vs0jAtJfQUNNCLl6m7CJyfeHs9L3E8pcVYYqTlG0SewNJ8sn7nOhTPIIoU85y67NmnO/zq9V9ZplYZm1x/8Zd52A3Vf6iU14tzE8ZIwD/Tcf6nopCwmCn9UGrS9nKRj9fwlRwK6iXyI0ASrFfxVtzS1eIxzq7hIkWsepCb3P+awcRQrn/qChIEsDzv2gKwWEthFR9KFi46T/tapUbRQ+zyJ1tYB3PQQt6v7/N1qIl2Vztyy8+rVtnD3TJwrSBM/1K08SRNyKlLrbxT1RO5ZgrCug98a6FksG2CkBTJ2RsElySX1lMRmbKibyLbRQRo8O77lhzO0tgN90gKvlR5+jgoUiSHTsSTHqAFApFQI4gMOUf4WvAZXdplIqIQWKTcSwiYAUa7dCCP3XaynLO56rBId1HBw/mi8dNMYhiXq/X9f/qPBw14oqWhV1Ub/kOhyl9TGbhnMtvDYQy3kJxm5a5mXprrf63YtTuPoMCAwEAAQ==-----END PUBLIC KEY-----"
+
 multi_factor:
   modes:
     phone_otp:

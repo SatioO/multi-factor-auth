@@ -4,7 +4,9 @@ import com.ifsg.multifactorauth.entities.MultiFactorEntity;
 import com.ifsg.multifactorauth.models.dtos.ChallengeResponse;
 import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
+import org.springframework.security.core.Authentication;
 
+import java.util.Map;
 import java.util.UUID;
 
 public interface MultiFactorService {
@@ -15,5 +17,5 @@ public interface MultiFactorService {
     ChallengeResponse verifyChallenge(VerifyChallengeDTO body);
 
     /** This request should be used when the client wants to start an authentication attempt. */
-    MultiFactorEntity initializeChallenge(InitializeChallengeDTO sessionId);
+    MultiFactorEntity initializeChallenge(Map<String, String> headers,  InitializeChallengeDTO sessionId, Authentication auth);
 }
