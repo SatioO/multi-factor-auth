@@ -2,6 +2,7 @@ package com.ifsg.multifactorauth.services;
 
 import com.ifsg.multifactorauth.adapters.multi_factor.MultiFactorAdapter;
 import com.ifsg.multifactorauth.entities.MultiFactorEntity;
+import com.ifsg.multifactorauth.exceptions.ResourceNotFoundException;
 import com.ifsg.multifactorauth.models.dtos.ChallengeDTO;
 import com.ifsg.multifactorauth.models.dtos.ChallengeResponse;
 import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
@@ -10,10 +11,8 @@ import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
 import com.ifsg.multifactorauth.models.enums.RequestHeaderEnum;
 import com.ifsg.multifactorauth.repositories.MultiFactorRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,7 +31,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
     public MultiFactorEntity getChallengeStatus(UUID challengeId) {
         return this.multiFactorRepository
                 .findById(challengeId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Challenge Not Found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Challenge Not Found."));
     }
 
     @Override
@@ -76,6 +75,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                 this.multiFactorRepository.save(
                         entity.toBuilder()
                                 .attempts(attempts)
+                                .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
                                 .status(AuthStatus.SUCCESS)
                                 .build());
 
@@ -90,6 +90,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                     this.multiFactorRepository.save(
                             entity.toBuilder()
                                     .attempts(attempts)
+                                    .authReasonCode(AuthReasonCode.VERIFICATION_BLOCKED)
                                     .status(AuthStatus.ERROR)
                                     .build());
 
@@ -103,6 +104,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                     this.multiFactorRepository.save(
                             entity.toBuilder()
                                     .attempts(attempts)
+                                    .authReasonCode(AuthReasonCode.CHALLENGE_FAILED)
                                     .status(AuthStatus.FAIL)
                                     .build());
 
@@ -130,7 +132,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                         .channel(headers.get(RequestHeaderEnum.CHANNEL.value))
                         .ipAddress(null)
                         .authMethod(session.getAuthMethod())
-                        .reasonCode(AuthReasonCode.VERIFICATION_REQUIRED)
+                        .authReasonCode(AuthReasonCode.VERIFICATION_REQUIRED)
                         .attempts(0)
                         .status(session.getStatus())
                         .createdTime(session.getCreatedTime())

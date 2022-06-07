@@ -72,7 +72,7 @@ public class MultiFactorEntity {
     private AuthMethod authMethod;
 
     @Column(nullable = true)
-    private AuthReasonCode reasonCode;
+    private AuthReasonCode authReasonCode;
 
     @Column(nullable = false)
     private AuthStatus status;
