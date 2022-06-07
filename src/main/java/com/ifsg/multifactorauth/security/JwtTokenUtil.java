@@ -1,4 +1,4 @@
-package com.ifsg.multifactorauth.config;
+package com.ifsg.multifactorauth.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

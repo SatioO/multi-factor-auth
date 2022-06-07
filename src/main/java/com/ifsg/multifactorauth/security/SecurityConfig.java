@@ -1,4 +1,4 @@
-package com.ifsg.multifactorauth.config;
+package com.ifsg.multifactorauth.security;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;

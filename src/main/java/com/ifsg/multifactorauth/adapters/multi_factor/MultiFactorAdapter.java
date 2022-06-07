@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class MultiFactorAdapter {
     private final RSAAdapter rsaAdapter;
-
     private final VeridiumAdapter veridiumAdapter;
     private final PhoneOTPAdapter phoneOTPAdapter;
     private final EmailOTPAdapter emailOTPAdapter;
