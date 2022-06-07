@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 public class VerifyChallengeDTO {
-    private UUID sessionId;
+    private UUID challengeId;
     private AuthMethod authMethod;
     private String code;
     private String browserVersion;

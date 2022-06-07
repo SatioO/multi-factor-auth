@@ -19,8 +19,10 @@ import java.util.UUID;
 @Entity(name = "MULTI_FACTOR_AUTH_SESSION")
 public class MultiFactorEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @Column(name = "challengeId", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    @Type(type="uuid-char")
+    private UUID challengeId;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(36)")
     @Type(type="uuid-char")

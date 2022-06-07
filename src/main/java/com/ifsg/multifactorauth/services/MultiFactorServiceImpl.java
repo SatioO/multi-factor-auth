@@ -10,7 +10,6 @@ import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
 import com.ifsg.multifactorauth.models.enums.RequestHeaderEnum;
 import com.ifsg.multifactorauth.repositories.MultiFactorRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,21 +19,25 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class MultiFactorServiceImpl implements MultiFactorService {
     private final MultiFactorAdapter multiFactorAdapter;
     private final MultiFactorRepository multiFactorRepository;
 
-    @Override
-    public MultiFactorEntity getChallengeStatus(UUID sessionId) {
-        System.out.println(sessionId);
-        return this.multiFactorRepository
-                .findBySessionId(sessionId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session Not Found."));
+    public MultiFactorServiceImpl(MultiFactorAdapter multiFactorAdapter, MultiFactorRepository multiFactorRepository) {
+        this.multiFactorRepository = multiFactorRepository;
+        this.multiFactorAdapter = multiFactorAdapter;
     }
+
+    @Override
+    public MultiFactorEntity getChallengeStatus(UUID challengeId) {
+        return this.multiFactorRepository
+                .findById(challengeId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Challenge Not Found."));
+    }
+
     @Override
     public ChallengeResponse verifyChallenge(VerifyChallengeDTO body) {
-        return this.multiFactorRepository.findBySessionId(body.getSessionId()).map(entity -> {
+        return this.multiFactorRepository.findById(body.getChallengeId()).map(entity -> {
             // NOTE: Throw error if the user tries to validate already approved session
             if (entity.getStatus() == AuthStatus.SUCCESS) {
                 return ChallengeResponse

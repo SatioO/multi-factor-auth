@@ -5,7 +5,6 @@ import com.ifsg.multifactorauth.models.dtos.ChallengeResponse;
 import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
 import com.ifsg.multifactorauth.services.MultiFactorService;
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +14,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/authn")
-@AllArgsConstructor
 public class MultiFactorController {
     private final MultiFactorService multiFactorService;
+
+    public MultiFactorController(MultiFactorService multiFactorService) {
+        this.multiFactorService = multiFactorService;
+    }
 
     @GetMapping("/status/{sessionId}")
     public MultiFactorEntity getChallengeStatus(@PathVariable UUID sessionId, @RequestHeader Map<String, String> headers) {
