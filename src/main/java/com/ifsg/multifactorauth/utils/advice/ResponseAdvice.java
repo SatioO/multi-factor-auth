@@ -1,4 +1,4 @@
-package com.ifsg.multifactorauth.utils.advise;
+package com.ifsg.multifactorauth.utils.advice;
 
 import com.ifsg.multifactorauth.models.dtos.ErrorDTO;
 import com.ifsg.multifactorauth.models.dtos.Metadata;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @ControllerAdvice
-public class ResponseAdvise implements ResponseBodyAdvice<Object> {
+public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {

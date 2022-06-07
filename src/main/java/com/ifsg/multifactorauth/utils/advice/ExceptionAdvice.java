@@ -1,4 +1,4 @@
-package com.ifsg.multifactorauth.utils.advise;
+package com.ifsg.multifactorauth.utils.advice;
 
 import com.ifsg.multifactorauth.exceptions.BusinessLogicException;
 import com.ifsg.multifactorauth.exceptions.InvalidInputException;
@@ -16,7 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
-public class ExceptionAdvise {
+public class ExceptionAdvice {
     @ExceptionHandler(InvalidInputException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
