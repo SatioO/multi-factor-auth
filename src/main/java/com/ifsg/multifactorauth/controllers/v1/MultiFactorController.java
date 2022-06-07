@@ -21,9 +21,9 @@ public class MultiFactorController {
         this.multiFactorService = multiFactorService;
     }
 
-    @GetMapping("/status/{sessionId}")
-    public MultiFactorEntity getChallengeStatus(@PathVariable UUID sessionId, @RequestHeader Map<String, String> headers) {
-        return this.multiFactorService.getChallengeStatus(sessionId);
+    @GetMapping("/status/{challengeId}")
+    public MultiFactorEntity getChallengeStatus(@PathVariable UUID challengeId, @RequestHeader Map<String, String> headers) {
+        return this.multiFactorService.getChallengeStatus(challengeId);
     }
 
     @PostMapping("/verify")
@@ -36,8 +36,8 @@ public class MultiFactorController {
         return this.multiFactorService.initializeChallenge(headers, body, auth);
     }
 
-    @PostMapping("/cancel")
-    public MultiFactorEntity cancelChallenge() {
+    @PostMapping("/cancel/{challengeId}")
+    public MultiFactorEntity cancelChallenge(@PathVariable UUID challengeId) {
         return null;
     }
 }
