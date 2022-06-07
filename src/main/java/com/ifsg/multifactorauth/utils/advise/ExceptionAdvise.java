@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
 public class ExceptionAdvise {
@@ -44,6 +45,20 @@ public class ExceptionAdvise {
         );
 
         return new ErrorDTO<>(null, metadata, errorDetails, HttpStatus.NOT_FOUND.name());
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    @ResponseBody
+    public ErrorDTO<ErrorDetailsDTO> handleStatusException(ResponseStatusException ex, WebRequest request) {
+        ErrorDetailsDTO errorDetails = new ErrorDetailsDTO(null, ex.getMessage());
+
+        Metadata metadata = new Metadata(
+                request.getHeader(RequestHeaderEnum.GLOBALUUID.value),
+                request.getHeader(RequestHeaderEnum.REQUESTUUID.value),
+                request.getHeader(RequestHeaderEnum.CHANNEL.value)
+        );
+
+        return new ErrorDTO<>(null, metadata, errorDetails, ex.getStatus().name());
     }
 
     @ExceptionHandler(BusinessLogicException.class)
