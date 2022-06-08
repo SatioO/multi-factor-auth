@@ -38,13 +38,13 @@ public class MultiFactorServiceImpl implements MultiFactorService {
     public ChallengeResponse verifyChallenge(VerifyChallengeDTO body) {
         return this.multiFactorRepository.findById(body.getChallengeId()).map(entity -> {
             // NOTE: Throw error if the user tries to validate already approved session
-            if (entity.getStatus() == AuthStatus.SUCCESS) {
-                return ChallengeResponse
-                        .builder()
-                        .authStatus(AuthStatus.ERROR)
-                        .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
-                        .build();
-            }
+//            if (entity.getStatus() == AuthStatus.SUCCESS) {
+//                return ChallengeResponse
+//                        .builder()
+//                        .authStatus(AuthStatus.ERROR)
+//                        .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
+//                        .build();
+//            }
 
             // NOTE: Throw error if the user tries to validate expired session
             if (entity.getStatus() == AuthStatus.EXPIRED) {

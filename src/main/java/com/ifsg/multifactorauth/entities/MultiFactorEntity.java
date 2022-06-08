@@ -77,10 +77,3 @@ public class MultiFactorEntity {
     @Column(nullable = false)
     private AuthStatus status;
 }
-
-/**
- *
- * min_failure_attempts: 5 -> user 5 incorrectly -> 6th - correctly -> 7th correctly -> Authentication, blocked
- * max_failure_attempts: 10
- *
- * */
