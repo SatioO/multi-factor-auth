@@ -117,6 +117,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
             }
         }).orElse(ChallengeResponse.builder().authStatus(AuthStatus.ERROR).authReasonCode(AuthReasonCode.CHALLENGE_NOT_FOUND).build());
     }
+
     @Override
     public MultiFactorEntity initializeChallenge(Map<String, String> headers, InitializeChallengeDTO body, Authentication auth) {
         ChallengeDTO session = this.multiFactorAdapter

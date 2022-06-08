@@ -5,8 +5,6 @@ import com.ifsg.multifactorauth.models.dtos.ErrorDTO;
 import com.ifsg.multifactorauth.models.dtos.ErrorDetailsDTO;
 import com.ifsg.multifactorauth.models.dtos.Metadata;
 import com.ifsg.multifactorauth.models.enums.RequestHeaderEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthEntryPoint implements AuthenticationEntryPoint {
-    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPoint.class);
     public @Override void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
             throws IOException {
         ObjectMapper mapper = new ObjectMapper();

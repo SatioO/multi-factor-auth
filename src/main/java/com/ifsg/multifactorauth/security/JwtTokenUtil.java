@@ -1,10 +1,10 @@
 package com.ifsg.multifactorauth.security;
 
+import com.ifsg.multifactorauth.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +16,12 @@ import java.util.function.Function;
 @Component
 public class JwtTokenUtil {
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+
+    private final JwtConfig jwtConfig;
+
+    public JwtTokenUtil(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+    }
 
     public String getUsernameFromToken(String token) throws NoSuchAlgorithmException, InvalidKeySpecException  {
         return getClaimFromToken(token, Claims::getSubject);
@@ -33,7 +37,7 @@ public class JwtTokenUtil {
     }
 
     private Claims getAllClaimsFromToken(String token) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return Jwts.parserBuilder().setSigningKey(SecurityConfig.getPublicKey(jwtSecret)).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(SecurityConfig.getPublicKey(jwtConfig.getSecret())).build().parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) throws NoSuchAlgorithmException, InvalidKeySpecException  {
