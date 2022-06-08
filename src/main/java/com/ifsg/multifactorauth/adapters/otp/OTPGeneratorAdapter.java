@@ -3,7 +3,7 @@ package com.ifsg.multifactorauth.adapters.otp;
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 
 public interface OTPGeneratorAdapter {
-    String generateOTP(int length) throws CodeGenerationException;
+    String generateOTP() throws CodeGenerationException;
 
     boolean verifyOTP(String otp);
 

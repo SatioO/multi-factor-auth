@@ -38,16 +38,16 @@ public class MultiFactorServiceImpl implements MultiFactorService {
     public ChallengeResponse verifyChallenge(VerifyChallengeDTO body) {
         return this.multiFactorRepository.findById(body.getChallengeId()).map(entity -> {
             // NOTE: Throw error if the user tries to validate already approved session
-//            if (entity.getStatus() == AuthStatus.SUCCESS) {
-//                return ChallengeResponse
-//                        .builder()
-//                        .authStatus(AuthStatus.ERROR)
-//                        .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
-//                        .build();
-//            }
+            if (entity.getAuthStatus() == AuthStatus.SUCCESS) {
+                return ChallengeResponse
+                        .builder()
+                        .authStatus(AuthStatus.ERROR)
+                        .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
+                        .build();
+            }
 
             // NOTE: Throw error if the user tries to validate expired session
-            if (entity.getStatus() == AuthStatus.EXPIRED) {
+            if (entity.getAuthStatus() == AuthStatus.EXPIRED) {
                 return ChallengeResponse
                         .builder()
                         .authStatus(AuthStatus.ERROR)
@@ -56,7 +56,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
             }
 
             // NOTE: Throw error if the user is blocked from verification after multiple failure attempts
-            if (entity.getStatus() == AuthStatus.ERROR) {
+            if (entity.getAuthStatus() == AuthStatus.ERROR) {
                 return ChallengeResponse
                         .builder()
                         .authStatus(AuthStatus.ERROR)
@@ -75,8 +75,8 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                 this.multiFactorRepository.save(
                         entity.toBuilder()
                                 .attempts(attempts)
+                                .authStatus(AuthStatus.SUCCESS)
                                 .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
-                                .status(AuthStatus.SUCCESS)
                                 .build());
 
                 return ChallengeResponse
@@ -91,7 +91,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                             entity.toBuilder()
                                     .attempts(attempts)
                                     .authReasonCode(AuthReasonCode.VERIFICATION_BLOCKED)
-                                    .status(AuthStatus.ERROR)
+                                    .authStatus(AuthStatus.ERROR)
                                     .build());
 
                     return ChallengeResponse
@@ -105,7 +105,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                             entity.toBuilder()
                                     .attempts(attempts)
                                     .authReasonCode(AuthReasonCode.CHALLENGE_FAILED)
-                                    .status(AuthStatus.FAIL)
+                                    .authStatus(AuthStatus.FAIL)
                                     .build());
 
                     return ChallengeResponse
@@ -135,7 +135,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                         .authMethod(session.getAuthMethod())
                         .authReasonCode(AuthReasonCode.VERIFICATION_REQUIRED)
                         .attempts(0)
-                        .status(session.getStatus())
+                        .authStatus(session.getStatus())
                         .createdTime(session.getCreatedTime())
                         .updatedTime(session.getCreatedTime())
                         .expiryTime(session.getExpiryTime())

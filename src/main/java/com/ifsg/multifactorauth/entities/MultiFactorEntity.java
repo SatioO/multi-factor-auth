@@ -50,8 +50,8 @@ public class MultiFactorEntity {
     @JsonIgnore
     private String ipAddress;
 
-    @JsonIgnore()
-    @Column(nullable = false)
+    @Column(nullable = true)
+    @JsonIgnore
     private String code;
 
     @Column(name = "created_time", nullable = false, updatable = false)
@@ -75,5 +75,5 @@ public class MultiFactorEntity {
     private AuthReasonCode authReasonCode;
 
     @Column(nullable = false)
-    private AuthStatus status;
+    private AuthStatus authStatus;
 }

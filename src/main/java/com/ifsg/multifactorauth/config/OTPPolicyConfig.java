@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class OTPPolicyConfig {
     private int codeLength;
-    private Long codeExpiry;
+    private int codeExpiry;
     private int codeLimit;
     private String codeSecret;
 }
