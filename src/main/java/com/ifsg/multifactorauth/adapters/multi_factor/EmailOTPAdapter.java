@@ -45,7 +45,7 @@ public class EmailOTPAdapter implements MultiFactorAuth {
     }
 
     @Override
-    public Boolean validateSession(MultiFactorEntity entity, VerifyChallengeDTO body) {
-        return otpGeneratorAdapter.verifyOTP(body.getCode());
+    public Boolean verifyChallenge(MultiFactorEntity entity, VerifyChallengeDTO body) {
+        return otpGeneratorAdapter.verifyOTP(body.getAnswer());
     }
 }

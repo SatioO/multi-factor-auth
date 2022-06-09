@@ -8,5 +8,5 @@ import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
 public interface MultiFactorAuth {
     ChallengeDTO createSession(InitializeChallengeDTO data);
 
-    Boolean validateSession(MultiFactorEntity entity, VerifyChallengeDTO body);
+    Boolean verifyChallenge(MultiFactorEntity entity, VerifyChallengeDTO body);
 }

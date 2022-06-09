@@ -1,5 +1,6 @@
 package com.ifsg.multifactorauth.adapters.multi_factor;
 
+import com.ifsg.multifactorauth.exceptions.InvalidInputException;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
 import com.ifsg.multifactorauth.models.interfaces.MultiFactorAuth;
 import lombok.AllArgsConstructor;
@@ -23,15 +24,13 @@ public class MultiFactorAdapter {
 
             case PIN_CODE -> { return null; }
 
-            case EMERGENCY_CODE -> { return null; }
-
             case VOICE_CODE -> { return null; }
 
             case RSA_SECUREID -> { return this.rsaAdapter; }
 
             case VERIDIUM -> { return this.veridiumAdapter; }
 
-            default -> { throw new RuntimeException("Invalid Auth Method"); }
+            default -> { throw new InvalidInputException("Invalid Auth Method"); }
         }
     }
 }

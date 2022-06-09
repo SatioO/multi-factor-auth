@@ -39,13 +39,14 @@ public class PhoneOTPAdapter implements MultiFactorAuth {
                     .expiryTime(calendar.getTime())
                     .createdTime(new Date())
                     .build();
+
         } catch (CodeGenerationException e) {
             throw new BusinessLogicException(e.getMessage());
         }
     }
 
     @Override
-    public Boolean validateSession(MultiFactorEntity entity, VerifyChallengeDTO body) {
-        return otpGeneratorAdapter.verifyOTP(body.getCode());
+    public Boolean verifyChallenge(MultiFactorEntity entity, VerifyChallengeDTO body) {
+        return otpGeneratorAdapter.verifyOTP(body.getAnswer());
     }
 }

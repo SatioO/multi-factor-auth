@@ -9,7 +9,7 @@ import java.util.UUID;
 public class VerifyChallengeDTO {
     private UUID challengeId;
     private AuthMethod authMethod;
-    private String code;
+    private String answer;
     private String browserVersion;
     private String deviceVersion;
 }

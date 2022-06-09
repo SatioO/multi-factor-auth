@@ -64,10 +64,19 @@ public class MultiFactorServiceImpl implements MultiFactorService {
                         .build();
             }
 
+            // NOTE: Throw error if the requested auth method is different from verification auth method
+            if(entity.getAuthMethod() != body.getAuthMethod()) {
+                return ChallengeResponse
+                        .builder()
+                        .authStatus(AuthStatus.FAIL)
+                        .authReasonCode(AuthReasonCode.AUTH_CODE_MISMATCH)
+                        .build();
+            }
+
             // NOTE: Connect to respective adapter to perform validation logic such as compare OTP
             boolean result = this.multiFactorAdapter
                     .getAdapter(body.getAuthMethod())
-                    .validateSession(entity, body);
+                    .verifyChallenge(entity, body);
 
             int attempts = entity.getAttempts() + 1;
 

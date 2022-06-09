@@ -15,7 +15,7 @@ public class RSAAdapter implements MultiFactorAuth {
     }
 
     @Override
-    public Boolean validateSession(MultiFactorEntity entity, VerifyChallengeDTO body) {
+    public Boolean verifyChallenge(MultiFactorEntity entity, VerifyChallengeDTO body) {
         return null;
     }
 }
