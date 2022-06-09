@@ -23,20 +23,13 @@ otp-policy:
   code-limit: 3
   code-secret: "MMZF7RKBAGAHJBUFNIAOOAUZJIJY5O6S"
 
-multi_factor:
-  modes:
-    phone_otp:
-      code_length: 6
-      code_expiry: 300000
-      code_limit: 3
-      secret: "MMZF7RKBAGAHJBUFNIAOOAUZJIJY5O6S"
-    email_otp:
-      code_length: 6
-      code_expiry: 300000
-      code_limit: 3
-    veridium:
-      code_expiry: 300000
-      code_limit: 3
-    rsa:
-      code_expiry: 300000
-      code_limit: 3
+multi-factor-policy:
+  method:
+    primary: 'VERIDIUM'
+    secondary: 'SMS_CODE'
+  attempts:
+    max: 3
+  rules:
+    - name: 'first time login'
+      description: 'rule to trigger multi factor at first time login'
+      code: 'FIRST_TIME_LOGIN'

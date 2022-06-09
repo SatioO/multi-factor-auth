@@ -3,10 +3,7 @@ package com.ifsg.multifactorauth.services;
 import com.ifsg.multifactorauth.adapters.multi_factor.MultiFactorAdapter;
 import com.ifsg.multifactorauth.entities.MultiFactorEntity;
 import com.ifsg.multifactorauth.exceptions.ResourceNotFoundException;
-import com.ifsg.multifactorauth.models.dtos.ChallengeDTO;
-import com.ifsg.multifactorauth.models.dtos.ChallengeResponse;
-import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
-import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
+import com.ifsg.multifactorauth.models.dtos.*;
 import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
 import com.ifsg.multifactorauth.models.enums.RequestHeaderEnum;
@@ -35,11 +32,11 @@ public class MultiFactorServiceImpl implements MultiFactorService {
     }
 
     @Override
-    public ChallengeResponse verifyChallenge(VerifyChallengeDTO body) {
+    public VerifyChallengeResponseDTO verifyChallenge(VerifyChallengeBodyDTO body) {
         return this.multiFactorRepository.findById(body.getChallengeId()).map(entity -> {
             // NOTE: Throw error if the user tries to validate already approved session
             if (entity.getAuthStatus() == AuthStatus.SUCCESS) {
-                return ChallengeResponse
+                return VerifyChallengeResponseDTO
                         .builder()
                         .authStatus(AuthStatus.ERROR)
                         .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
@@ -48,7 +45,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
 
             // NOTE: Throw error if the user tries to validate expired session
             if (entity.getAuthStatus() == AuthStatus.EXPIRED) {
-                return ChallengeResponse
+                return VerifyChallengeResponseDTO
                         .builder()
                         .authStatus(AuthStatus.ERROR)
                         .authReasonCode(AuthReasonCode.CHALLENGE_EXPIRED)
@@ -57,7 +54,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
 
             // NOTE: Throw error if the user is blocked from verification after multiple failure attempts
             if (entity.getAuthStatus() == AuthStatus.ERROR) {
-                return ChallengeResponse
+                return VerifyChallengeResponseDTO
                         .builder()
                         .authStatus(AuthStatus.ERROR)
                         .authReasonCode(AuthReasonCode.VERIFICATION_BLOCKED)
@@ -66,7 +63,7 @@ public class MultiFactorServiceImpl implements MultiFactorService {
 
             // NOTE: Throw error if the requested auth method is different from verification auth method
             if(entity.getAuthMethod() != body.getAuthMethod()) {
-                return ChallengeResponse
+                return VerifyChallengeResponseDTO
                         .builder()
                         .authStatus(AuthStatus.FAIL)
                         .authReasonCode(AuthReasonCode.AUTH_CODE_MISMATCH)
@@ -74,62 +71,28 @@ public class MultiFactorServiceImpl implements MultiFactorService {
             }
 
             // NOTE: Connect to respective adapter to perform validation logic such as compare OTP
-            boolean result = this.multiFactorAdapter
+            VerifyChallengeAdapterDTO result = this.multiFactorAdapter
                     .getAdapter(body.getAuthMethod())
                     .verifyChallenge(entity, body);
 
-            int attempts = entity.getAttempts() + 1;
+            this.multiFactorRepository.save(
+                    entity.toBuilder()
+                            .attempts(entity.getAttempts() + 1)
+                            .authStatus(result.getAuthStatus())
+                            .authReasonCode(result.getAuthReasonCode())
+                            .build());
 
-            if(result) {
-                this.multiFactorRepository.save(
-                        entity.toBuilder()
-                                .attempts(attempts)
-                                .authStatus(AuthStatus.SUCCESS)
-                                .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
-                                .build());
-
-                return ChallengeResponse
-                        .builder()
-                        .authStatus(AuthStatus.SUCCESS)
-                        .authReasonCode(AuthReasonCode.CHALLENGE_VERIFIED)
-                        .build();
-            } else {
-                if (attempts > 3) {
-                    // NOTE: if entered OTP doesn't match, mark it with failure in DB but if it crosses set limit, then mark that as blocked
-                    this.multiFactorRepository.save(
-                            entity.toBuilder()
-                                    .attempts(attempts)
-                                    .authReasonCode(AuthReasonCode.VERIFICATION_BLOCKED)
-                                    .authStatus(AuthStatus.ERROR)
-                                    .build());
-
-                    return ChallengeResponse
-                            .builder()
-                            .authStatus(AuthStatus.ERROR)
-                            .authReasonCode(AuthReasonCode.VERIFICATION_BLOCKED)
-                            .build();
-                } else {
-                    // NOTE: if entered OTP doesn't match, mark it with failure in DB but if it crosses set limit, then mark that as blocked
-                    this.multiFactorRepository.save(
-                            entity.toBuilder()
-                                    .attempts(attempts)
-                                    .authReasonCode(AuthReasonCode.CHALLENGE_FAILED)
-                                    .authStatus(AuthStatus.FAIL)
-                                    .build());
-
-                    return ChallengeResponse
-                            .builder()
-                            .authStatus(AuthStatus.FAIL)
-                            .authReasonCode(AuthReasonCode.CHALLENGE_FAILED)
-                            .build();
-                }
-            }
-        }).orElse(ChallengeResponse.builder().authStatus(AuthStatus.ERROR).authReasonCode(AuthReasonCode.CHALLENGE_NOT_FOUND).build());
+            return VerifyChallengeResponseDTO
+                    .builder()
+                    .authStatus(result.getAuthStatus())
+                    .authReasonCode(result.getAuthReasonCode())
+                    .build();
+        }).orElse(VerifyChallengeResponseDTO.builder().authStatus(AuthStatus.ERROR).authReasonCode(AuthReasonCode.CHALLENGE_NOT_FOUND).build());
     }
 
     @Override
-    public MultiFactorEntity initializeChallenge(Map<String, String> headers, InitializeChallengeDTO body, Authentication auth) {
-        ChallengeDTO session = this.multiFactorAdapter
+    public MultiFactorEntity initializeChallenge(Map<String, String> headers, InitializeChallengeBodyDTO body, Authentication auth) {
+        CreateChallengeAdapterDTO session = this.multiFactorAdapter
                 .getAdapter(body.getAuthMethod())
                 .createSession(body);
 

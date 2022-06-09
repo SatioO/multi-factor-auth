@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Metadata {
+public class MetadataDTO {
     @JsonProperty("GLOBALUUID")
     private String GLOBALUUID;
 

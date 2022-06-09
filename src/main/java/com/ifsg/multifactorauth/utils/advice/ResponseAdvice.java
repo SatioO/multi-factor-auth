@@ -1,7 +1,7 @@
 package com.ifsg.multifactorauth.utils.advice;
 
 import com.ifsg.multifactorauth.models.dtos.ErrorDTO;
-import com.ifsg.multifactorauth.models.dtos.Metadata;
+import com.ifsg.multifactorauth.models.dtos.MetadataDTO;
 import com.ifsg.multifactorauth.models.dtos.SuccessDTO;
 import com.ifsg.multifactorauth.models.enums.RequestHeaderEnum;
 import com.ifsg.multifactorauth.models.interfaces.IgnoreResponseBinding;
@@ -32,13 +32,13 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
                 if ((!(o instanceof ErrorDTO<?>)) && (!(o instanceof SuccessDTO))) {
                     HttpHeaders headers = serverHttpRequest.getHeaders();
 
-                    Metadata metadata = new Metadata(
+                    MetadataDTO metadataDTO = new MetadataDTO(
                             headers.getFirst(RequestHeaderEnum.GLOBALUUID.value),
                             headers.getFirst(RequestHeaderEnum.REQUESTUUID.value),
                             headers.getFirst(RequestHeaderEnum.CHANNEL.value)
                     );
 
-                    SuccessDTO<Object> responseBody = new SuccessDTO<>(o, metadata, null, HttpStatus.OK.name());
+                    SuccessDTO<Object> responseBody = new SuccessDTO<>(o, metadataDTO, null, HttpStatus.OK.name());
                     return responseBody;
                 }
             }

@@ -1,9 +1,9 @@
 package com.ifsg.multifactorauth.controllers.v1;
 
 import com.ifsg.multifactorauth.entities.MultiFactorEntity;
-import com.ifsg.multifactorauth.models.dtos.ChallengeResponse;
-import com.ifsg.multifactorauth.models.dtos.InitializeChallengeDTO;
-import com.ifsg.multifactorauth.models.dtos.VerifyChallengeDTO;
+import com.ifsg.multifactorauth.models.dtos.VerifyChallengeResponseDTO;
+import com.ifsg.multifactorauth.models.dtos.InitializeChallengeBodyDTO;
+import com.ifsg.multifactorauth.models.dtos.VerifyChallengeBodyDTO;
 import com.ifsg.multifactorauth.services.MultiFactorService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +27,12 @@ public class MultiFactorController {
     }
 
     @PostMapping("/verify")
-    public ChallengeResponse verifyChallenge(@RequestHeader Map<String, String> headers, @Valid @RequestBody VerifyChallengeDTO body) {
+    public VerifyChallengeResponseDTO verifyChallenge(@RequestHeader Map<String, String> headers, @Valid @RequestBody VerifyChallengeBodyDTO body) {
         return this.multiFactorService.verifyChallenge(body);
     }
 
     @PostMapping("/initialize")
-    public MultiFactorEntity initializeChallenge(@RequestHeader Map<String, String> headers, @Valid @RequestBody InitializeChallengeDTO body, Authentication auth) {
+    public MultiFactorEntity initializeChallenge(@RequestHeader Map<String, String> headers, @Valid @RequestBody InitializeChallengeBodyDTO body, Authentication auth) {
         return this.multiFactorService.initializeChallenge(headers, body, auth);
     }
 

@@ -5,7 +5,7 @@ import com.ifsg.multifactorauth.exceptions.InvalidInputException;
 import com.ifsg.multifactorauth.exceptions.ResourceNotFoundException;
 import com.ifsg.multifactorauth.models.dtos.ErrorDTO;
 import com.ifsg.multifactorauth.models.dtos.ErrorDetailsDTO;
-import com.ifsg.multifactorauth.models.dtos.Metadata;
+import com.ifsg.multifactorauth.models.dtos.MetadataDTO;
 import com.ifsg.multifactorauth.models.enums.RequestHeaderEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,13 +23,13 @@ public class ExceptionAdvice {
     public ErrorDTO<ErrorDetailsDTO> invalidInputException(InvalidInputException ex, WebRequest request) {
         ErrorDetailsDTO errorDetails = new ErrorDetailsDTO(null, ex.getMessage());
 
-        Metadata metadata = new Metadata(
+        MetadataDTO metadataDTO = new MetadataDTO(
                 request.getHeader(RequestHeaderEnum.GLOBALUUID.value),
                 request.getHeader(RequestHeaderEnum.REQUESTUUID.value),
                 request.getHeader(RequestHeaderEnum.CHANNEL.value)
         );
 
-        return new ErrorDTO<>(null, metadata, errorDetails, HttpStatus.BAD_REQUEST.name());
+        return new ErrorDTO<>(null, metadataDTO, errorDetails, HttpStatus.BAD_REQUEST.name());
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -38,13 +38,13 @@ public class ExceptionAdvice {
     public ErrorDTO<ErrorDetailsDTO> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         ErrorDetailsDTO errorDetails = new ErrorDetailsDTO(null, ex.getMessage());
 
-        Metadata metadata = new Metadata(
+        MetadataDTO metadataDTO = new MetadataDTO(
                 request.getHeader(RequestHeaderEnum.GLOBALUUID.value),
                 request.getHeader(RequestHeaderEnum.REQUESTUUID.value),
                 request.getHeader(RequestHeaderEnum.CHANNEL.value)
         );
 
-        return new ErrorDTO<>(null, metadata, errorDetails, HttpStatus.NOT_FOUND.name());
+        return new ErrorDTO<>(null, metadataDTO, errorDetails, HttpStatus.NOT_FOUND.name());
     }
 
     @ExceptionHandler(ResponseStatusException.class)
@@ -52,13 +52,13 @@ public class ExceptionAdvice {
     public ErrorDTO<ErrorDetailsDTO> handleStatusException(ResponseStatusException ex, WebRequest request) {
         ErrorDetailsDTO errorDetails = new ErrorDetailsDTO(null, ex.getMessage());
 
-        Metadata metadata = new Metadata(
+        MetadataDTO metadataDTO = new MetadataDTO(
                 request.getHeader(RequestHeaderEnum.GLOBALUUID.value),
                 request.getHeader(RequestHeaderEnum.REQUESTUUID.value),
                 request.getHeader(RequestHeaderEnum.CHANNEL.value)
         );
 
-        return new ErrorDTO<>(null, metadata, errorDetails, ex.getStatus().name());
+        return new ErrorDTO<>(null, metadataDTO, errorDetails, ex.getStatus().name());
     }
 
     @ExceptionHandler(BusinessLogicException.class)
@@ -67,13 +67,13 @@ public class ExceptionAdvice {
     public ErrorDTO<ErrorDetailsDTO> resourceNotFoundException(BusinessLogicException ex, WebRequest request) {
         ErrorDetailsDTO errorDetails = new ErrorDetailsDTO(null, ex.getMessage());
 
-        Metadata metadata = new Metadata(
+        MetadataDTO metadataDTO = new MetadataDTO(
                 request.getHeader(RequestHeaderEnum.GLOBALUUID.value),
                 request.getHeader(RequestHeaderEnum.REQUESTUUID.value),
                 request.getHeader(RequestHeaderEnum.CHANNEL.value)
         );
 
-        return new ErrorDTO<>(null, metadata, errorDetails, HttpStatus.INTERNAL_SERVER_ERROR.name());
+        return new ErrorDTO<>(null, metadataDTO, errorDetails, HttpStatus.INTERNAL_SERVER_ERROR.name());
     }
 
     @ExceptionHandler(Exception.class)
@@ -82,12 +82,12 @@ public class ExceptionAdvice {
     public ErrorDTO<ErrorDetailsDTO> processAllError(Exception ex, WebRequest request) {
         ErrorDetailsDTO errorDetails = new ErrorDetailsDTO(null, ex.getMessage());
 
-        Metadata metadata = new Metadata(
+        MetadataDTO metadataDTO = new MetadataDTO(
                 request.getHeader(RequestHeaderEnum.GLOBALUUID.value),
                 request.getHeader(RequestHeaderEnum.REQUESTUUID.value),
                 request.getHeader(RequestHeaderEnum.CHANNEL.value)
         );
 
-        return new ErrorDTO<>(null, metadata, errorDetails, HttpStatus.INTERNAL_SERVER_ERROR.name());
+        return new ErrorDTO<>(null, metadataDTO, errorDetails, HttpStatus.INTERNAL_SERVER_ERROR.name());
     }
 }
