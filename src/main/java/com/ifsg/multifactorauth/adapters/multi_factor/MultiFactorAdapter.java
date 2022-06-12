@@ -2,7 +2,7 @@ package com.ifsg.multifactorauth.adapters.multi_factor;
 
 import com.ifsg.multifactorauth.exceptions.InvalidInputException;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
-import com.ifsg.multifactorauth.models.interfaces.MultiFactorAuth;
+import com.ifsg.multifactorauth.models.interfaces.MultiFactorAuthAdapter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class MultiFactorAdapter {
     private final PhoneOTPAdapter phoneOTPAdapter;
     private final EmailOTPAdapter emailOTPAdapter;
 
-    public MultiFactorAuth getAdapter(AuthMethod method) {
+    public MultiFactorAuthAdapter getAdapter(AuthMethod method) {
         switch (method) {
             case SMS_CODE -> { return this.phoneOTPAdapter; }
 

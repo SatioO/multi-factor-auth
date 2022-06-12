@@ -27,6 +27,8 @@ multi-factor-policy:
   method:
     primary: 'VERIDIUM'
     secondary: 'SMS_CODE'
+  soft-token:
+    token-length: 32
   attempts:
     max: 3
   rules:

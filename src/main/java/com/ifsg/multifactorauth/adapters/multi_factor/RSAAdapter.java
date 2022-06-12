@@ -7,11 +7,11 @@ import com.ifsg.multifactorauth.models.dtos.VerifyChallengeAdapterDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeBodyDTO;
 import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
-import com.ifsg.multifactorauth.models.interfaces.MultiFactorAuth;
+import com.ifsg.multifactorauth.models.interfaces.MultiFactorAuthAdapter;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RSAAdapter implements MultiFactorAuth {
+public class RSAAdapter implements MultiFactorAuthAdapter {
     @Override
     public CreateChallengeAdapterDTO createSession(InitializeChallengeBodyDTO data) {
         return null;

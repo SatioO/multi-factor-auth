@@ -6,5 +6,6 @@ public enum AuthStatus {
     FAIL,
     EXPIRED,
     ERROR,
-    BLOCKED
+    BLOCKED,
+    TIMEOUT
 }

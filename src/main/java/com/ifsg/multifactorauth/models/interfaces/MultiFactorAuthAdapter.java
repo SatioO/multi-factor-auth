@@ -6,8 +6,8 @@ import com.ifsg.multifactorauth.models.dtos.InitializeChallengeBodyDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeAdapterDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeBodyDTO;
 
-public interface MultiFactorAuth {
+public interface MultiFactorAuthAdapter {
     CreateChallengeAdapterDTO createSession(InitializeChallengeBodyDTO data);
 
-    VerifyChallengeAdapterDTO verifyChallenge(MultiFactorEntity entity, VerifyChallengeBodyDTO body);
+    VerifyChallengeAdapterDTO verifyChallenge(MultiFactorEntity entity, VerifyChallengeBodyDTO data);
 }

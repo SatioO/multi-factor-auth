@@ -18,11 +18,11 @@ public class OtpGeneratorAdapterImpl implements OTPGeneratorAdapter {
     }
 
     @Override
-    public String generateOTP() throws CodeGenerationException {
+    public String generateOTP(String secret) throws CodeGenerationException {
         TimeProvider timeProvider = new SystemTimeProvider();
         CodeGenerator codeGenerator = new DefaultCodeGenerator(HashingAlgorithm.SHA1, this.otpPolicyConfig.getCodeLength());
         long currentBucket = Math.floorDiv(timeProvider.getTime(), this.otpPolicyConfig.getCodeExpiry());
-        return codeGenerator.generate(otpPolicyConfig.getCodeSecret(), currentBucket);
+        return codeGenerator.generate(secret, currentBucket);
     }
 
     @Override
