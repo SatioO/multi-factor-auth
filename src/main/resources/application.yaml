@@ -20,8 +20,11 @@ jwt:
 otp-policy:
   code-length: 6
   code-expiry: 30
-  code-limit: 3
-  code-secret: "MMZF7RKBAGAHJBUFNIAOOAUZJIJY5O6S"
+  code-invalid-attempt: 3
+
+pin-policy:
+  code-length: 4
+  code-invalid-attempt: 3
 
 multi-factor-policy:
   method:

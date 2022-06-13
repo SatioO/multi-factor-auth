@@ -5,7 +5,7 @@ import dev.samstevens.totp.exceptions.CodeGenerationException;
 public interface OTPGeneratorAdapter {
     String generateOTP(String secret) throws CodeGenerationException;
 
-    boolean verifyOTP(String otp);
+    boolean verifyOTP(String secret, String otp);
 
     String generateSecret(int length);
 }

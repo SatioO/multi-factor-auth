@@ -1,5 +1,6 @@
 package com.ifsg.multifactorauth.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ifsg.multifactorauth.models.enums.UserStatus;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -49,9 +50,11 @@ public class UserEntity {
     private String phoneNumber;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String smsToken;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String emailToken;
 
     @Column(nullable = false)

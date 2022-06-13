@@ -26,11 +26,11 @@ public class OtpGeneratorAdapterImpl implements OTPGeneratorAdapter {
     }
 
     @Override
-    public boolean verifyOTP(String otp) {
+    public boolean verifyOTP(String secret, String otp) {
         TimeProvider timeProvider = new SystemTimeProvider();
         CodeGenerator codeGenerator = new DefaultCodeGenerator();
         CodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
-        return verifier.isValidCode(otpPolicyConfig.getCodeSecret(), otp);
+        return verifier.isValidCode(secret, otp);
     }
 
     @Override

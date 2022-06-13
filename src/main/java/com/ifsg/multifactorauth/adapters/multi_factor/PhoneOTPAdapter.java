@@ -41,13 +41,12 @@ public class PhoneOTPAdapter implements MultiFactorAuthAdapter {
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
         try {
-            String code = otpGeneratorAdapter.generateOTP(user.getSmsToken());
-            System.out.println(user.getSmsToken());
+            otpGeneratorAdapter.generateOTP(user.getSmsToken());
+
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, otpPolicyConfig.getCodeExpiry() + otpPolicyConfig.getCodeExpiry() / 2);
 
             return CreateChallengeAdapterDTO.builder()
-                    .code(code)
                     .authMethod(data.getAuthMethod())
                     .status(AuthStatus.CHALLENGE)
                     .expiryTime(calendar.getTime())
@@ -60,7 +59,11 @@ public class PhoneOTPAdapter implements MultiFactorAuthAdapter {
 
     @Override
     public VerifyChallengeAdapterDTO verifyChallenge(MultiFactorEntity entity, VerifyChallengeBodyDTO body) {
-        boolean isValidCode = otpGeneratorAdapter.verifyOTP(body.getAnswer());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = this.userRepository.findByExternalId(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+
+        boolean isValidCode = otpGeneratorAdapter.verifyOTP(user.getSmsToken(), body.getAnswer());
 
         AuthStatus authStatus = isValidCode ? AuthStatus.SUCCESS : AuthStatus.FAIL;
         AuthReasonCode authReasonCode = isValidCode ? AuthReasonCode.CHALLENGE_VERIFIED : AuthReasonCode.CHALLENGE_FAILED;
