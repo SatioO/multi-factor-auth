@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserAdapter {
     private final OTPUserAdapter otpUserAdapter;
-    private final RSAUserAdapterAdapter rsaUserAdapter;
+    private final RSAUserAdapter rsaUserAdapter;
     private final VeridiumUserAdapterAdapter veridiumUserAdapter;
 
     public com.ifsg.multifactorauth.models.interfaces.UserAdapter getAdapter(AuthMethod method) {

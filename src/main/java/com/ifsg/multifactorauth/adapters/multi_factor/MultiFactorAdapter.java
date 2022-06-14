@@ -20,11 +20,7 @@ public class MultiFactorAdapter {
 
             case EMAIL_CODE -> { return this.emailOTPAdapter; }
 
-            case SECURITY_QUESTION -> { return null; }
-
-            case PIN_CODE -> { return null; }
-
-            case VOICE_CODE -> { return null; }
+            case SECURITY_QUESTION, VOICE_CODE, PIN_CODE -> { return null; }
 
             case RSA_SECUREID -> { return this.rsaAdapter; }
 
