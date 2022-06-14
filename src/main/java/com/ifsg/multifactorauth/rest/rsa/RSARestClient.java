@@ -16,13 +16,11 @@ import java.io.StringWriter;
 @Slf4j
 @Service
 public class RSARestClient {
-
     private final WebClient webClient;
     private final RSAPolicyConfig rsaPolicyConfig;
 
-
     public RSARestClient(WebClient.Builder webClientBuilder, RSAPolicyConfig rsaPolicyConfig) {
-        this.webClient = webClientBuilder // you can also just use WebClient.builder()
+        this.webClient = webClientBuilder
                 .baseUrl(rsaPolicyConfig.getBaseUrl())
                 .build();
 
@@ -48,9 +46,7 @@ public class RSARestClient {
         JAXB.marshal(authentication, sw);
         String xmlString = sw.toString();
 
-        HttpEntity<String> requestInfo = new HttpEntity<String>(xmlString, headers);
-
         return restTemplate
-                .postForEntity("http://10.1.7.214:8080/auth/authn", requestInfo, AuthenticationResult.class);
+                .postForEntity("/auth/authn", new HttpEntity<String>(xmlString, headers), AuthenticationResult.class);
     }
 }
