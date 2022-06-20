@@ -5,6 +5,8 @@ import com.ifsg.multifactorauth.models.dtos.CreateUserBodyDTO;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
 
 public interface UserService {
-    UserEntity createUser(AuthMethod authMethod, CreateUserBodyDTO body);
+    void createUser(AuthMethod authMethod, CreateUserBodyDTO body);
     UserEntity getUserDetails(AuthMethod authMethod, String externalId);
+
+    void assignTokenToUser(AuthMethod authMethod, String externalId);
 }

@@ -1,6 +1,6 @@
 package com.ifsg.multifactorauth.models.interfaces;
 
-public interface AuthRestClient {
+public interface IAuthRestClient {
     String getSession();
     String verifySession();
 }

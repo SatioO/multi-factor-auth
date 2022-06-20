@@ -16,8 +16,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity createUser(AuthMethod method, CreateUserBodyDTO body) {
-        return userAdapter.getAdapter(method).createUser(body);
+    public void createUser(AuthMethod method, CreateUserBodyDTO body) {
+        userAdapter.getAdapter(method).createUser(body);
     }
 
     @Override
@@ -26,5 +26,10 @@ public class UserServiceImpl implements UserService {
                 .getAdapter(method)
                 .getUserDetails(externalId)
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+    }
+
+    @Override
+    public void assignTokenToUser(AuthMethod method, String externalId) {
+        userAdapter.getAdapter(method).assignToken(externalId);
     }
 }

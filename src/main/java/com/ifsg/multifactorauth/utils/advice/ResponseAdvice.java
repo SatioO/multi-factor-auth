@@ -4,7 +4,7 @@ import com.ifsg.multifactorauth.models.dtos.ErrorDTO;
 import com.ifsg.multifactorauth.models.dtos.MetadataDTO;
 import com.ifsg.multifactorauth.models.dtos.SuccessDTO;
 import com.ifsg.multifactorauth.models.enums.RequestHeaderEnum;
-import com.ifsg.multifactorauth.models.interfaces.IgnoreResponseBinding;
+import com.ifsg.multifactorauth.models.interfaces.IIgnoreResponseBinding;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         if (methodParameter.getContainingClass().isAnnotationPresent(RestController.class)) {
 
-            if (!methodParameter.getMethod().isAnnotationPresent(IgnoreResponseBinding.class)) {
+            if (!methodParameter.getMethod().isAnnotationPresent(IIgnoreResponseBinding.class)) {
                 if ((!(o instanceof ErrorDTO<?>)) && (!(o instanceof SuccessDTO))) {
                     HttpHeaders headers = serverHttpRequest.getHeaders();
 

@@ -5,7 +5,10 @@ import com.ifsg.multifactorauth.models.dtos.CreateUserBodyDTO;
 
 import java.util.Optional;
 
-public interface UserAdapter {
-    UserEntity createUser(CreateUserBodyDTO body);
+public interface IUserAdapter {
+    Boolean createUser(CreateUserBodyDTO body);
+
+    Boolean assignToken(String externalId);
+
     Optional<UserEntity> getUserDetails(String externalId);
 }

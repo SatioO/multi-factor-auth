@@ -23,7 +23,12 @@ public class UserController {
     }
 
     @PostMapping("/{authMethod}/user/create")
-    public UserEntity createUser(@PathVariable AuthMethod authMethod, @RequestBody @Valid CreateUserBodyDTO body) {
-        return userService.createUser(authMethod, body);
+    public void createUser(@PathVariable AuthMethod authMethod, @RequestBody @Valid CreateUserBodyDTO body) {
+        userService.createUser(authMethod, body);
+    }
+
+    @PostMapping("/{authMethod}/user/{externalId}/assign-token")
+    public void assignTokenToUser(@PathVariable AuthMethod authMethod, @PathVariable String externalId) {
+        userService.assignTokenToUser(authMethod, externalId);
     }
 }

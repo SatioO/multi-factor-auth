@@ -2,6 +2,7 @@ package com.ifsg.multifactorauth.adapters.user;
 
 import com.ifsg.multifactorauth.exceptions.InvalidInputException;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
+import com.ifsg.multifactorauth.models.interfaces.IUserAdapter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,9 @@ import org.springframework.stereotype.Service;
 public class UserAdapter {
     private final OTPUserAdapter otpUserAdapter;
     private final RSAUserAdapter rsaUserAdapter;
-    private final VeridiumUserAdapterAdapter veridiumUserAdapter;
+    private final VeridiumUserAdapter veridiumUserAdapter;
 
-    public com.ifsg.multifactorauth.models.interfaces.UserAdapter getAdapter(AuthMethod method) {
+    public IUserAdapter getAdapter(AuthMethod method) {
         switch (method) {
             case SMS_CODE, EMAIL_CODE -> {
                 return otpUserAdapter;

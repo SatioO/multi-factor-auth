@@ -3,15 +3,20 @@ package com.ifsg.multifactorauth.adapters.user;
 
 import com.ifsg.multifactorauth.entities.UserEntity;
 import com.ifsg.multifactorauth.models.dtos.CreateUserBodyDTO;
-import com.ifsg.multifactorauth.models.interfaces.UserAdapter;
+import com.ifsg.multifactorauth.models.interfaces.IUserAdapter;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class VeridiumUserAdapterAdapter implements UserAdapter {
+public class VeridiumUserAdapter implements IUserAdapter {
     @Override
-    public UserEntity createUser(CreateUserBodyDTO body) {
+    public Boolean createUser(CreateUserBodyDTO body) {
+        return null;
+    }
+
+    @Override
+    public Boolean assignToken(String externalId) {
         return null;
     }
 

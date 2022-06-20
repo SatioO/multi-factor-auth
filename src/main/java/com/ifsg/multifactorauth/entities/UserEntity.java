@@ -49,11 +49,11 @@ public class UserEntity {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonIgnore
     private String smsToken;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonIgnore
     private String emailToken;
 

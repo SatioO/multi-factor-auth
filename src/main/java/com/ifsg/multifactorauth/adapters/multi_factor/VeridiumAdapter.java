@@ -7,13 +7,13 @@ import com.ifsg.multifactorauth.models.dtos.VerifyChallengeAdapterDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeBodyDTO;
 import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
-import com.ifsg.multifactorauth.models.interfaces.MultiFactorAuthAdapter;
+import com.ifsg.multifactorauth.models.interfaces.IMultiFactorAuthAdapter;
 import com.ifsg.multifactorauth.rest.veridium.VeridiumRestClient;
 import org.springframework.stereotype.Service;
 
 
 @Service
-public class VeridiumAdapter implements MultiFactorAuthAdapter {
+public class VeridiumAdapter implements IMultiFactorAuthAdapter {
     private final VeridiumRestClient restClient;
 
     public VeridiumAdapter(VeridiumRestClient restClient) {

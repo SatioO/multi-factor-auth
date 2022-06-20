@@ -12,7 +12,7 @@ import com.ifsg.multifactorauth.models.dtos.VerifyChallengeAdapterDTO;
 import com.ifsg.multifactorauth.models.dtos.VerifyChallengeBodyDTO;
 import com.ifsg.multifactorauth.models.enums.AuthReasonCode;
 import com.ifsg.multifactorauth.models.enums.AuthStatus;
-import com.ifsg.multifactorauth.models.interfaces.MultiFactorAuthAdapter;
+import com.ifsg.multifactorauth.models.interfaces.IMultiFactorAuthAdapter;
 import com.ifsg.multifactorauth.repositories.UserRepository;
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 import org.springframework.security.core.Authentication;
@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Service
-public class PhoneOTPAdapter implements MultiFactorAuthAdapter {
+public class PhoneOTPAdapter implements IMultiFactorAuthAdapter {
     private final OTPGeneratorAdapter otpGeneratorAdapter;
     private final OTPPolicyConfig otpPolicyConfig;
     private final UserRepository userRepository;
