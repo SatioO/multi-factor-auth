@@ -3,6 +3,7 @@ package com.ifsg.multifactorauth.rest.rsa.models;
 import lombok.Data;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "serviceResult")
@@ -13,4 +14,7 @@ public class ServiceResult {
 
     @XmlAttribute(name = "errorMessage")
     private String errorMessage;
+
+    @XmlElement(name = "TokenSerialNumber")
+    private String tokenSerialNumber;
 }

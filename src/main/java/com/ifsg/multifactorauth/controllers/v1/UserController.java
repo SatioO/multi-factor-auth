@@ -4,6 +4,7 @@ import com.ifsg.multifactorauth.entities.UserEntity;
 import com.ifsg.multifactorauth.models.dtos.CreateUserBodyDTO;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
 import com.ifsg.multifactorauth.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/{authMethod}/user/create")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public void createUser(@PathVariable AuthMethod authMethod, @RequestBody @Valid CreateUserBodyDTO body) {
         userService.createUser(authMethod, body);
     }

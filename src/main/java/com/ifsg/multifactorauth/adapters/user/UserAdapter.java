@@ -9,14 +9,19 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class UserAdapter {
-    private final OTPUserAdapter otpUserAdapter;
+    private final EmailUserAdapter emailUserAdapter;
+    private final SMSUserAdapter smsUserAdapter;
     private final RSAUserAdapter rsaUserAdapter;
     private final VeridiumUserAdapter veridiumUserAdapter;
 
     public IUserAdapter getAdapter(AuthMethod method) {
         switch (method) {
-            case SMS_CODE, EMAIL_CODE -> {
-                return otpUserAdapter;
+            case EMAIL_CODE -> {
+                return emailUserAdapter;
+            }
+
+            case SMS_CODE -> {
+                return smsUserAdapter;
             }
 
             case RSA_SECUREID -> {

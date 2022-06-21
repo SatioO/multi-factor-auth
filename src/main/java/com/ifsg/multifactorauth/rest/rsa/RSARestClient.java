@@ -69,4 +69,15 @@ public class RSARestClient {
         return restTemplate
                 .exchange("http://10.1.7.214:8080/am8/user/create/" + data.getExternalId(), HttpMethod.PUT, new HttpEntity<String>(userStr, headers), ServiceResult.class);
     }
+
+    public ResponseEntity<ServiceResult> assignToken(String authToken, String externalId) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_XML);
+        headers.set("RSA_AUTHENTICATION_TOKEN", authToken);
+
+        return restTemplate
+                .exchange("http://10.1.7.214:8080/am8/user/assignNext/"+ externalId +"/software", HttpMethod.GET, new HttpEntity<String>(null, headers), ServiceResult.class);
+    }
 }

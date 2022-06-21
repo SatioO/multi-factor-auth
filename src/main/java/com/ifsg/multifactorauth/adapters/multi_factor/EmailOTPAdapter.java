@@ -1,6 +1,6 @@
 package com.ifsg.multifactorauth.adapters.multi_factor;
 
-import com.ifsg.multifactorauth.adapters.otp.OTPGeneratorAdapter;
+import com.ifsg.multifactorauth.adapters.otp.IOTPGeneratorAdapter;
 import com.ifsg.multifactorauth.config.OTPPolicyConfig;
 import com.ifsg.multifactorauth.entities.MultiFactorEntity;
 import com.ifsg.multifactorauth.entities.UserEntity;
@@ -24,12 +24,12 @@ import java.util.Date;
 
 @Service
 public class EmailOTPAdapter implements IMultiFactorAuthAdapter {
-    private final OTPGeneratorAdapter otpGeneratorAdapter;
+    private final IOTPGeneratorAdapter IOTPGeneratorAdapter;
     private final OTPPolicyConfig otpPolicyConfig;
     private final UserRepository userRepository;
 
-    public EmailOTPAdapter(OTPPolicyConfig otpPolicyConfig, OTPGeneratorAdapter otpGeneratorAdapter, UserRepository userRepository) {
-        this.otpGeneratorAdapter = otpGeneratorAdapter;
+    public EmailOTPAdapter(OTPPolicyConfig otpPolicyConfig, IOTPGeneratorAdapter IOTPGeneratorAdapter, UserRepository userRepository) {
+        this.IOTPGeneratorAdapter = IOTPGeneratorAdapter;
         this.otpPolicyConfig = otpPolicyConfig;
         this.userRepository = userRepository;
     }
@@ -41,7 +41,7 @@ public class EmailOTPAdapter implements IMultiFactorAuthAdapter {
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
         try {
-            otpGeneratorAdapter.generateOTP(user.getEmailToken());
+            IOTPGeneratorAdapter.generateOTP(user.getEmailToken());
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, otpPolicyConfig.getCodeExpiry() + otpPolicyConfig.getCodeExpiry() / 2);
 
@@ -62,7 +62,7 @@ public class EmailOTPAdapter implements IMultiFactorAuthAdapter {
         UserEntity user = this.userRepository.findByExternalId(authentication.getName())
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
-        boolean isValidCode = otpGeneratorAdapter.verifyOTP(user.getEmailToken(), body.getAnswer());
+        boolean isValidCode = IOTPGeneratorAdapter.verifyOTP(user.getEmailToken(), body.getAnswer());
 
         AuthStatus authStatus = isValidCode ? AuthStatus.SUCCESS : AuthStatus.FAIL;
         AuthReasonCode authReasonCode = isValidCode ? AuthReasonCode.CHALLENGE_VERIFIED : AuthReasonCode.CHALLENGE_FAILED;
