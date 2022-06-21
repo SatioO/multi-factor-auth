@@ -10,10 +10,10 @@ import dev.samstevens.totp.time.TimeProvider;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OTPGeneratorAdapter implements IOTPGeneratorAdapter {
+public class OTPGeneratorAdapterImpl implements IOTPGeneratorAdapter {
     private final OTPPolicyConfig otpPolicyConfig;
 
-    public OTPGeneratorAdapter(OTPPolicyConfig otpPolicyConfig) {
+    public OTPGeneratorAdapterImpl(OTPPolicyConfig otpPolicyConfig) {
         this.otpPolicyConfig = otpPolicyConfig;
     }
 

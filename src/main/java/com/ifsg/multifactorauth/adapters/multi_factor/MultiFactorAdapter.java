@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 public class MultiFactorAdapter {
     private final RSAAdapter rsaAdapter;
     private final VeridiumAdapter veridiumAdapter;
-    private final PhoneOTPAdapter phoneOTPAdapter;
+    private final SMSOTPAdapter SMSOTPAdapter;
     private final EmailOTPAdapter emailOTPAdapter;
 
     public IMultiFactorAuthAdapter getAdapter(AuthMethod method) {
         switch (method) {
-            case SMS_CODE -> { return this.phoneOTPAdapter; }
+            case SMS_CODE -> { return this.SMSOTPAdapter; }
 
             case EMAIL_CODE -> { return this.emailOTPAdapter; }
 

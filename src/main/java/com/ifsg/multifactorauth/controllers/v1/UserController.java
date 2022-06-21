@@ -1,6 +1,7 @@
 package com.ifsg.multifactorauth.controllers.v1;
 
 import com.ifsg.multifactorauth.entities.UserEntity;
+import com.ifsg.multifactorauth.models.dtos.AssignTokenBodyDTO;
 import com.ifsg.multifactorauth.models.dtos.CreateUserBodyDTO;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
 import com.ifsg.multifactorauth.services.UserService;
@@ -29,8 +30,8 @@ public class UserController {
         userService.createUser(authMethod, body);
     }
 
-    @PostMapping("/{authMethod}/user/{externalId}/assign-token")
-    public void assignTokenToUser(@PathVariable AuthMethod authMethod, @PathVariable String externalId) {
-        userService.assignTokenToUser(authMethod, externalId);
+    @PostMapping("/{authMethod}/user/assign-token")
+    public void assignTokenToUser(@PathVariable AuthMethod authMethod, @RequestBody AssignTokenBodyDTO body) {
+        userService.assignTokenToUser(authMethod, body);
     }
 }

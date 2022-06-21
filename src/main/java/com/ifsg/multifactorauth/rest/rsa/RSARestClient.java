@@ -18,6 +18,8 @@ public class RSARestClient {
     private final WebClient webClient;
     private final RSAPolicyConfig rsaPolicyConfig;
 
+    private final String baseUrl = "http://10.1.7.214:8080";
+
     public RSARestClient(WebClient.Builder webClientBuilder, RSAPolicyConfig rsaPolicyConfig) {
         this.webClient = webClientBuilder
                 .baseUrl(rsaPolicyConfig.getBaseUrl())
@@ -46,7 +48,7 @@ public class RSARestClient {
         String authenticationStr = sw.toString();
 
         return restTemplate
-                .exchange("http://10.1.7.214:8080/auth/authn",HttpMethod.POST, new HttpEntity<String>(authenticationStr, headers), AuthenticationResult.class);
+                .exchange(baseUrl + "/auth/authn",HttpMethod.POST, new HttpEntity<String>(authenticationStr, headers), AuthenticationResult.class);
     }
 
     public ResponseEntity<ServiceResult> createUser(String authToken, CreateUserBodyDTO data) {
@@ -67,7 +69,7 @@ public class RSARestClient {
         String userStr = sw.toString();
 
         return restTemplate
-                .exchange("http://10.1.7.214:8080/am8/user/create/" + data.getExternalId(), HttpMethod.PUT, new HttpEntity<String>(userStr, headers), ServiceResult.class);
+                .exchange(baseUrl + "/am8/user/create/" + data.getExternalId(), HttpMethod.PUT, new HttpEntity<String>(userStr, headers), ServiceResult.class);
     }
 
     public ResponseEntity<ServiceResult> assignToken(String authToken, String externalId) {
@@ -78,6 +80,6 @@ public class RSARestClient {
         headers.set("RSA_AUTHENTICATION_TOKEN", authToken);
 
         return restTemplate
-                .exchange("http://10.1.7.214:8080/am8/user/assignNext/"+ externalId +"/software", HttpMethod.GET, new HttpEntity<String>(null, headers), ServiceResult.class);
+                .exchange(baseUrl + "/am8/user/assignNext/"+ externalId +"/software", HttpMethod.GET, new HttpEntity<String>(null, headers), ServiceResult.class);
     }
 }

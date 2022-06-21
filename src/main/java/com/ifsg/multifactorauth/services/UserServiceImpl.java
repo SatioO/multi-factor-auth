@@ -3,6 +3,7 @@ package com.ifsg.multifactorauth.services;
 import com.ifsg.multifactorauth.adapters.user.UserAdapter;
 import com.ifsg.multifactorauth.entities.UserEntity;
 import com.ifsg.multifactorauth.exceptions.ResourceNotFoundException;
+import com.ifsg.multifactorauth.models.dtos.AssignTokenBodyDTO;
 import com.ifsg.multifactorauth.models.dtos.CreateUserBodyDTO;
 import com.ifsg.multifactorauth.models.enums.AuthMethod;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void assignTokenToUser(AuthMethod method, String externalId) {
-        userAdapter.getAdapter(method).assignToken(externalId);
+    public void assignTokenToUser(AuthMethod method, AssignTokenBodyDTO body) {
+        userAdapter.getAdapter(method).assignToken(body);
     }
 }

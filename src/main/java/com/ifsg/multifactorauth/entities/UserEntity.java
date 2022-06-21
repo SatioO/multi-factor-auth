@@ -1,6 +1,5 @@
 package com.ifsg.multifactorauth.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ifsg.multifactorauth.models.enums.UserStatus;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -21,7 +20,7 @@ import java.util.UUID;
 public class UserEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
-    @Column(name = "challengeId", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    @Column(name = "userId", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
     @Type(type="uuid-char")
     private UUID id;
 
@@ -48,14 +47,6 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String phoneNumber;
-
-    @Column(nullable = true)
-    @JsonIgnore
-    private String smsToken;
-
-    @Column(nullable = true)
-    @JsonIgnore
-    private String emailToken;
 
     @Column(nullable = false)
     private UserStatus status;

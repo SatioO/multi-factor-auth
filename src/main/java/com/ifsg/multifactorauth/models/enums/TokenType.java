@@ -2,6 +2,6 @@ package com.ifsg.multifactorauth.models.enums;
 
 public enum TokenType {
     EMAIL,
-    PHONE,
+    SMS,
     GOOGLE_AUTH
 }

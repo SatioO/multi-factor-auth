@@ -5,6 +5,7 @@ import com.ifsg.multifactorauth.entities.UserEntity;
 import com.ifsg.multifactorauth.entities.UserSoftTokenEntity;
 import com.ifsg.multifactorauth.exceptions.InvalidInputException;
 import com.ifsg.multifactorauth.exceptions.ResourceNotFoundException;
+import com.ifsg.multifactorauth.models.dtos.AssignTokenBodyDTO;
 import com.ifsg.multifactorauth.models.dtos.CreateUserBodyDTO;
 import com.ifsg.multifactorauth.models.enums.TokenStatus;
 import com.ifsg.multifactorauth.models.enums.TokenType;
@@ -12,6 +13,7 @@ import com.ifsg.multifactorauth.models.enums.UserStatus;
 import com.ifsg.multifactorauth.models.interfaces.IUserAdapter;
 import com.ifsg.multifactorauth.repositories.SoftTokenRepository;
 import com.ifsg.multifactorauth.repositories.UserRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -56,18 +58,27 @@ public class EmailUserAdapter implements IUserAdapter {
     }
 
     @Override
-    public Boolean assignToken(String externalId) {
+    public Boolean assignToken(AssignTokenBodyDTO data) {
         return userRepository
-                .findByExternalId(externalId).map(foundUser -> {
+                .findByExternalId(data.getExternalId()).map(foundUser -> {
+                    softTokenRepository
+                            .findByExternalIdAndType(PageRequest.of(0, 1), data.getExternalId(), TokenType.EMAIL)
+                            .stream()
+                            .findFirst()
+                            .ifPresent((token) -> softTokenRepository.save(
+                                    token.toBuilder().status(TokenStatus.INACTIVE).build()));
+
+
                     softTokenRepository.save(
                             UserSoftTokenEntity.builder()
-                                    .externalId(externalId)
+                                    .externalId(data.getExternalId())
                                     .token(IOTPGeneratorAdapter.generateSecret(32))
                                     .type(TokenType.EMAIL)
                                     .createdTime(new Date())
                                     .updatedTime(new Date())
                                     .status(TokenStatus.ACTIVE).build()
                     );
+
                     return true;
                 }).orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
