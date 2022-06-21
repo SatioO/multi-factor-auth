@@ -38,6 +38,8 @@ public class RSAUserAdapter implements IUserAdapter {
             throw new InvalidInputException("Device type is required");
         }
 
+        this.authRestClient.generateQR(data.getDeviceType(), data.getDeviceId());
+
         return Optional.ofNullable(authRestClient.getAuthToken().getBody())
                 .map(r -> this.authRestClient.assignToken(r.getAuthenticationToken(), data.getExternalId()))
                 .map(r -> Optional.ofNullable(r.getBody())

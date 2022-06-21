@@ -22,7 +22,7 @@ public class MultiFactorAdapter {
 
             case SECURITY_QUESTION, VOICE_CODE, PIN_CODE -> { return null; }
 
-            case RSA_SECUREID -> { return this.rsaAdapter; }
+            case RSA_SECURID -> { return this.rsaAdapter; }
 
             case VERIDIUM -> { return this.veridiumAdapter; }
 

@@ -8,9 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "rsa-policy")
 @Data
 public class RSAPolicyConfig {
-    private String baseUrl;
-    private String profile;
-    private String type;
-    private String username;
-    private String password;
+    private RSAConnectionConfig connection;
+    private int codeLength;
+    private int codeExpiry;
 }
+

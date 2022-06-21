@@ -9,4 +9,5 @@ import lombok.Data;
 public class AssignTokenBodyDTO {
     private String externalId;
     private DeviceType deviceType;
+    private String deviceId;
 }

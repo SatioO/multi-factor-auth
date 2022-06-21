@@ -12,4 +12,6 @@ public class OTPPolicyConfig {
     private int codeExpiry;
     private int codeLimit;
     private String codeSecret;
+    private int softTokenLength;
 }
+

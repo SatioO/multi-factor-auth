@@ -1,6 +1,7 @@
 package com.ifsg.multifactorauth.adapters.user;
 
 import com.ifsg.multifactorauth.adapters.otp.IOTPGeneratorAdapter;
+import com.ifsg.multifactorauth.config.OTPPolicyConfig;
 import com.ifsg.multifactorauth.entities.UserEntity;
 import com.ifsg.multifactorauth.entities.UserSoftTokenEntity;
 import com.ifsg.multifactorauth.exceptions.InvalidInputException;
@@ -24,11 +25,13 @@ public class SMSUserAdapter implements IUserAdapter {
     private final UserRepository userRepository;
     private final SoftTokenRepository softTokenRepository;
     private final IOTPGeneratorAdapter IOTPGeneratorAdapter;
+    private final OTPPolicyConfig otpPolicyConfig;
 
-    public SMSUserAdapter(UserRepository userRepository, SoftTokenRepository softTokenRepository, IOTPGeneratorAdapter IOTPGeneratorAdapter) {
+    public SMSUserAdapter(UserRepository userRepository, OTPPolicyConfig otpPolicyConfig, SoftTokenRepository softTokenRepository, IOTPGeneratorAdapter IOTPGeneratorAdapter) {
         this.userRepository = userRepository;
         this.IOTPGeneratorAdapter = IOTPGeneratorAdapter;
         this.softTokenRepository = softTokenRepository;
+        this.otpPolicyConfig = otpPolicyConfig;
     }
 
     @Override
@@ -70,7 +73,7 @@ public class SMSUserAdapter implements IUserAdapter {
                     softTokenRepository.save(
                             UserSoftTokenEntity.builder()
                                     .externalId(data.getExternalId())
-                                    .token(IOTPGeneratorAdapter.generateSecret(32))
+                                    .token(IOTPGeneratorAdapter.generateSecret(otpPolicyConfig.getSoftTokenLength()))
                                     .type(TokenType.SMS)
                                     .createdTime(new Date())
                                     .updatedTime(new Date())

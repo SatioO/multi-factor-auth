@@ -5,7 +5,7 @@ public enum AuthMethod {
     EMAIL_CODE,
     PIN_CODE,
     VOICE_CODE,
-    RSA_SECUREID,
+    RSA_SECURID,
     VERIDIUM,
     SECURITY_QUESTION
 }

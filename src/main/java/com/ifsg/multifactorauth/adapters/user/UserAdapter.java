@@ -24,7 +24,7 @@ public class UserAdapter {
                 return smsUserAdapter;
             }
 
-            case RSA_SECUREID -> {
+            case RSA_SECURID -> {
                 return rsaUserAdapter;
             }
 
